@@ -41,11 +41,10 @@ void addRandomTile() {
 bool moveLeft() {
     bool moved = false;
     for (int i = 0; i < SIZE; i++) {
-        int k = 0;  // Vị trí tiếp theo để đặt ô
+        int k = 0;
         for (int j = 0; j < SIZE; j++) {
             if (board[i][j] != 0) {
                 if (k > 0 && board[i][k-1] == board[i][j]) {
-                    // Hợp nhất ô
                     board[i][k-1] *= 2;
                     board[i][j] = 0;
                     moved = true;
@@ -66,11 +65,10 @@ bool moveLeft() {
 bool moveRight() {
     bool moved = false;
     for (int i = 0; i < SIZE; i++) {
-        int k = SIZE - 1;  // Vị trí tiếp theo để đặt ô
+        int k = SIZE - 1;
         for (int j = SIZE - 1; j >= 0; j--) {
             if (board[i][j] != 0) {
                 if (k < SIZE - 1 && board[i][k+1] == board[i][j]) {
-                    // Hợp nhất ô
                     board[i][k+1] *= 2;
                     board[i][j] = 0;
                     moved = true;
@@ -91,11 +89,10 @@ bool moveRight() {
 bool moveUp() {
     bool moved = false;
     for (int j = 0; j < SIZE; j++) {
-        int k = 0;  // Vị trí tiếp theo để đặt ô
+        int k = 0;
         for (int i = 0; i < SIZE; i++) {
             if (board[i][j] != 0) {
                 if (k > 0 && board[k-1][j] == board[i][j]) {
-                    // Hợp nhất ô
                     board[k-1][j] *= 2;
                     board[i][j] = 0;
                     moved = true;
@@ -116,11 +113,10 @@ bool moveUp() {
 bool moveDown() {
     bool moved = false;
     for (int j = 0; j < SIZE; j++) {
-        int k = SIZE - 1;  // Vị trí tiếp theo để đặt ô
+        int k = SIZE - 1;
         for (int i = SIZE - 1; i >= 0; i--) {
             if (board[i][j] != 0) {
                 if (k < SIZE - 1 && board[k+1][j] == board[i][j]) {
-                    // Hợp nhất ô
                     board[k+1][j] *= 2;
                     board[i][j] = 0;
                     moved = true;
@@ -136,4 +132,42 @@ bool moveDown() {
         }
     }
     return moved;
+}
+
+bool checkWin() {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] == WIN_VALUE) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool checkLose() {
+    // Kiểm tra xem còn ô trống không
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] == 0) {
+                return false;  // Còn ô trống, chưa thua
+            }
+        }
+    }
+
+    // Kiểm tra xem có thể hợp nhất ô nào không
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            // Kiểm tra ô bên phải
+            if (j < SIZE - 1 && board[i][j] == board[i][j + 1]) {
+                return false;  // Có thể hợp nhất, chưa thua
+            }
+            // Kiểm tra ô bên dưới
+            if (i < SIZE - 1 && board[i][j] == board[i + 1][j]) {
+                return false;  // Có thể hợp nhất, chưa thua
+            }
+        }
+    }
+
+    return true;  // Không còn ô trống và không thể hợp nhất, thua
 }
