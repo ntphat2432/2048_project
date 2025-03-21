@@ -9,5 +9,9 @@ extern int board[SIZE][SIZE];
 
 void printBoard();
 void addRandomTile();
+bool moveUp();
+bool moveDown();
+bool moveLeft();
+bool moveRight();
 
 #endif
