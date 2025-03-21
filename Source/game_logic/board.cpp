@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip> 
 #include "board.h"
 
 int board[SIZE][SIZE] = {0};
@@ -6,7 +7,11 @@ int board[SIZE][SIZE] = {0};
 void printBoard() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            std::cout << board[i][j] << "\t";
+            if (board[i][j] == 0) {
+                std::cout << std::setw(4) << ".";
+            } else {
+                std::cout << std::setw(4) << board[i][j];
+            }
         }
         std::cout << std::endl;
     }
