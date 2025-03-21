@@ -1,7 +1,6 @@
 #include <iostream>
 #include "game_logic/board.h"
 
-// Hàm xóa màn hình console (Windows)
 void clearScreen() {
     system("cls");
 }
@@ -11,6 +10,7 @@ int main() {
     addRandomTile();
     addRandomTile();
     clearScreen();
+    std::cout << "Score: " << getScore() << std::endl;
     printBoard();
 
     char move;
@@ -35,14 +35,15 @@ int main() {
         }
 
         clearScreen();
+        std::cout << "Score: " << getScore() << std::endl;
         printBoard();
 
         if (checkWin()) {
-            std::cout << "You win!" << std::endl;
+            std::cout << "You win! Final score: " << getScore() << std::endl;
             break;
         }
         if (checkLose()) {
-            std::cout << "Game over! You lose!" << std::endl;
+            std::cout << "Game over! You lose! Final score: " << getScore() << std::endl;
             break;
         }
     }

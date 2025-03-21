@@ -1,8 +1,9 @@
 #include <iostream>
-#include <iomanip> 
+#include <iomanip>
 #include "board.h"
 
 int board[SIZE][SIZE] = {0};
+int score = 0;  // Khởi tạo điểm số
 
 void printBoard() {
     for (int i = 0; i < SIZE; i++) {
@@ -51,6 +52,7 @@ bool moveLeft() {
             if (board[i][j] != 0) {
                 if (k > 0 && board[i][k-1] == board[i][j]) {
                     board[i][k-1] *= 2;
+                    score += board[i][k-1];  // Cộng điểm
                     board[i][j] = 0;
                     moved = true;
                 } else {
@@ -75,6 +77,7 @@ bool moveRight() {
             if (board[i][j] != 0) {
                 if (k < SIZE - 1 && board[i][k+1] == board[i][j]) {
                     board[i][k+1] *= 2;
+                    score += board[i][k+1];  // Cộng điểm
                     board[i][j] = 0;
                     moved = true;
                 } else {
@@ -99,6 +102,7 @@ bool moveUp() {
             if (board[i][j] != 0) {
                 if (k > 0 && board[k-1][j] == board[i][j]) {
                     board[k-1][j] *= 2;
+                    score += board[k-1][j];  // Cộng điểm
                     board[i][j] = 0;
                     moved = true;
                 } else {
@@ -123,6 +127,7 @@ bool moveDown() {
             if (board[i][j] != 0) {
                 if (k < SIZE - 1 && board[k+1][j] == board[i][j]) {
                     board[k+1][j] *= 2;
+                    score += board[k+1][j];  // Cộng điểm
                     board[i][j] = 0;
                     moved = true;
                 } else {
@@ -151,28 +156,28 @@ bool checkWin() {
 }
 
 bool checkLose() {
-    // Kiểm tra xem còn ô trống không
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (board[i][j] == 0) {
-                return false;  // Còn ô trống, chưa thua
+                return false;
             }
         }
     }
 
-    // Kiểm tra xem có thể hợp nhất ô nào không
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            // Kiểm tra ô bên phải
             if (j < SIZE - 1 && board[i][j] == board[i][j + 1]) {
-                return false;  // Có thể hợp nhất, chưa thua
+                return false;
             }
-            // Kiểm tra ô bên dưới
             if (i < SIZE - 1 && board[i][j] == board[i + 1][j]) {
-                return false;  // Có thể hợp nhất, chưa thua
+                return false;
             }
         }
     }
 
-    return true;  // Không còn ô trống và không thể hợp nhất, thua
+    return true;
+}
+
+int getScore() {
+    return score;
 }

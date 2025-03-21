@@ -5,8 +5,9 @@
 #include <ctime>
 
 const int SIZE = 4;
-const int WIN_VALUE = 2048;  // Giá trị để thắng
+const int WIN_VALUE = 2048;
 extern int board[SIZE][SIZE];
+extern int score;  // Biến lưu điểm số
 
 void printBoard();
 void addRandomTile();
@@ -14,7 +15,8 @@ bool moveUp();
 bool moveDown();
 bool moveLeft();
 bool moveRight();
-bool checkWin();  // Kiểm tra thắng
-bool checkLose(); // Kiểm tra thua
+bool checkWin();
+bool checkLose();
+int getScore();  // Hàm lấy điểm số
 
 #endif
