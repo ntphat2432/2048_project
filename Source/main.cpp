@@ -7,6 +7,13 @@ void clearScreen() {
 
 int main() {
     srand(time(0));
+    clearScreen();
+    std::cout << "Welcome to 2048!" << std::endl;
+    std::cout << "Use W/A/S/D to move, Q to quit." << std::endl;
+    std::cout << "Reach 2048 to win!" << std::endl;
+    std::cout << "Press Enter to start..." << std::endl;
+    std::cin.get();  // Chờ người chơi nhấn Enter
+
     addRandomTile();
     addRandomTile();
     clearScreen();
