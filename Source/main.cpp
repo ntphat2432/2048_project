@@ -34,6 +34,9 @@ int main() {
         else if (move == 'D') moved = moveRight();
         else {
             std::cout << "Invalid move! Use W/A/S/D or Q to quit." << std::endl;
+            std::cout << "Press Enter to continue..." << std::endl;
+            std::cin.ignore();  // Xóa bộ đệm
+            std::cin.get();    // Chờ nhấn Enter
             continue;
         }
 

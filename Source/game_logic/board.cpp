@@ -3,8 +3,9 @@
 #include "board.h"
 
 int board[SIZE][SIZE] = {0};
-int score = 0;  // Khởi tạo điểm số
+int score = 0;
 
+// In bảng 4x4 ra console, thay số 0 bằng dấu chấm và căn chỉnh ô
 void printBoard() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -19,6 +20,7 @@ void printBoard() {
     std::cout << "------------" << std::endl;
 }
 
+// Thêm một ô ngẫu nhiên (2 hoặc 4) vào vị trí trống trên bảng
 void addRandomTile() {
     int empty = 0;
     for (int i = 0; i < SIZE; i++) {
@@ -44,19 +46,22 @@ void addRandomTile() {
     }
 }
 
+// Di chuyển và hợp nhất ô sang trái, trả về true nếu có thay đổi
 bool moveLeft() {
     bool moved = false;
     for (int i = 0; i < SIZE; i++) {
-        int k = 0;
+        int k = 0;  // Vị trí tiếp theo để đặt ô
         for (int j = 0; j < SIZE; j++) {
             if (board[i][j] != 0) {
                 if (k > 0 && board[i][k-1] == board[i][j]) {
+                    // Hợp nhất ô nếu giống nhau
                     board[i][k-1] *= 2;
                     score += board[i][k-1];  // Cộng điểm
                     board[i][j] = 0;
                     moved = true;
                 } else {
                     if (k != j) {
+                        // Di chuyển ô nếu vị trí thay đổi
                         board[i][k] = board[i][j];
                         board[i][j] = 0;
                         moved = true;
@@ -69,6 +74,7 @@ bool moveLeft() {
     return moved;
 }
 
+// Di chuyển và hợp nhất ô sang phải, trả về true nếu có thay đổi
 bool moveRight() {
     bool moved = false;
     for (int i = 0; i < SIZE; i++) {
@@ -77,7 +83,7 @@ bool moveRight() {
             if (board[i][j] != 0) {
                 if (k < SIZE - 1 && board[i][k+1] == board[i][j]) {
                     board[i][k+1] *= 2;
-                    score += board[i][k+1];  // Cộng điểm
+                    score += board[i][k+1];
                     board[i][j] = 0;
                     moved = true;
                 } else {
@@ -94,6 +100,7 @@ bool moveRight() {
     return moved;
 }
 
+// Di chuyển và hợp nhất ô lên trên, trả về true nếu có thay đổi
 bool moveUp() {
     bool moved = false;
     for (int j = 0; j < SIZE; j++) {
@@ -102,7 +109,7 @@ bool moveUp() {
             if (board[i][j] != 0) {
                 if (k > 0 && board[k-1][j] == board[i][j]) {
                     board[k-1][j] *= 2;
-                    score += board[k-1][j];  // Cộng điểm
+                    score += board[k-1][j];
                     board[i][j] = 0;
                     moved = true;
                 } else {
@@ -119,6 +126,7 @@ bool moveUp() {
     return moved;
 }
 
+// Di chuyển và hợp nhất ô xuống dưới, trả về true nếu có thay đổi
 bool moveDown() {
     bool moved = false;
     for (int j = 0; j < SIZE; j++) {
@@ -127,7 +135,7 @@ bool moveDown() {
             if (board[i][j] != 0) {
                 if (k < SIZE - 1 && board[k+1][j] == board[i][j]) {
                     board[k+1][j] *= 2;
-                    score += board[k+1][j];  // Cộng điểm
+                    score += board[k+1][j];
                     board[i][j] = 0;
                     moved = true;
                 } else {
@@ -144,6 +152,7 @@ bool moveDown() {
     return moved;
 }
 
+// Kiểm tra điều kiện thắng: trả về true nếu có ô đạt 2048
 bool checkWin() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -155,7 +164,9 @@ bool checkWin() {
     return false;
 }
 
+// Kiểm tra điều kiện thua: trả về true nếu không còn ô trống và không thể hợp nhất
 bool checkLose() {
+    // Kiểm tra ô trống
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (board[i][j] == 0) {
@@ -164,6 +175,7 @@ bool checkLose() {
         }
     }
 
+    // Kiểm tra khả năng hợp nhất
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (j < SIZE - 1 && board[i][j] == board[i][j + 1]) {
@@ -178,6 +190,7 @@ bool checkLose() {
     return true;
 }
 
+// Trả về điểm số hiện tại
 int getScore() {
     return score;
 }
