@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <fstream>  // Thêm để dùng file
 #include "board.h"
 
 int board[SIZE][SIZE] = {0};
@@ -193,4 +194,45 @@ bool checkLose() {
 // Trả về điểm số hiện tại
 int getScore() {
     return score;
+}
+
+// Lưu trạng thái trò chơi (bảng và điểm số) vào file
+void saveGame() {
+    std::ofstream outFile("savegame.txt");
+    if (outFile.is_open()) {
+        // Lưu điểm số
+        outFile << score << std::endl;
+        // Lưu bảng
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                outFile << board[i][j] << " ";
+            }
+            outFile << std::endl;
+        }
+        outFile.close();
+        std::cout << "Game saved successfully!" << std::endl;
+    } else {
+        std::cout << "Error: Unable to save game!" << std::endl;
+    }
+}
+
+// Tải trạng thái trò chơi từ file, trả về true nếu thành công
+bool loadGame() {
+    std::ifstream inFile("savegame.txt");
+    if (inFile.is_open()) {
+        // Tải điểm số
+        inFile >> score;
+        // Tải bảng
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                inFile >> board[i][j];
+            }
+        }
+        inFile.close();
+        std::cout << "Game loaded successfully!" << std::endl;
+        return true;
+    } else {
+        std::cout << "No saved game found. Starting new game..." << std::endl;
+        return false;
+    }
 }

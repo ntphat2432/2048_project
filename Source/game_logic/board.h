@@ -18,5 +18,7 @@ bool moveRight();
 bool checkWin();
 bool checkLose();
 int getScore();  // Hàm lấy điểm số
+void saveGame();  // Lưu trạng thái trò chơi
+bool loadGame();  // Tải trạng thái trò chơi, trả về true nếu thành công
 
 #endif
