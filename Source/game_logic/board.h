@@ -20,5 +20,8 @@ bool checkLose();
 int getScore();  // Hàm lấy điểm số
 void saveGame();  // Lưu trạng thái trò chơi
 bool loadGame();  // Tải trạng thái trò chơi, trả về true nếu thành công
+void loadHighScore();  // Tải high score từ file
+void saveHighScore();  // Lưu high score vào file
+int getHighScore();    // Trả về high score
 
 #endif

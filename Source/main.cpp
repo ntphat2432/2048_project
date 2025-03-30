@@ -7,8 +7,10 @@ void clearScreen() {
 
 int main() {
     srand(time(0));
+    loadHighScore();  // Tải high score khi bắt đầu
     clearScreen();
     std::cout << "Welcome to 2048!" << std::endl;
+    std::cout << "High Score: " << getHighScore() << std::endl;
     std::cout << "Use W/A/S/D to move, Q to quit, P to save." << std::endl;
     std::cout << "Reach 2048 to win!" << std::endl;
     std::cout << "1. Start new game" << std::endl;
@@ -37,12 +39,12 @@ int main() {
 
         bool moved = false;
         if (move == 'Q') break;
-        else if (move == 'P') {  // Sửa phím S thành P để lưu trò chơi
+        else if (move == 'P') {
             saveGame();
             continue;
         }
         else if (move == 'W') moved = moveUp();
-        else if (move == 'S') moved = moveDown();  // Phím S giờ chỉ dùng để di chuyển xuống
+        else if (move == 'S') moved = moveDown();
         else if (move == 'A') moved = moveLeft();
         else if (move == 'D') moved = moveRight();
         else {
@@ -63,10 +65,14 @@ int main() {
 
         if (checkWin()) {
             std::cout << "You win! Final score: " << getScore() << std::endl;
+            saveHighScore();  // Cập nhật high score
+            std::cout << "New High Score: " << getHighScore() << std::endl;
             break;
         }
         if (checkLose()) {
             std::cout << "Game over! You lose! Final score: " << getScore() << std::endl;
+            saveHighScore();  // Cập nhật high score
+            std::cout << "High Score: " << getHighScore() << std::endl;
             break;
         }
     }

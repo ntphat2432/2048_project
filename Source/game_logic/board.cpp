@@ -5,6 +5,7 @@
 
 int board[SIZE][SIZE] = {0};
 int score = 0;
+int highScore = 0;
 
 // In bảng 4x4 ra console, thay số 0 bằng dấu chấm và căn chỉnh ô
 void printBoard() {
@@ -235,4 +236,32 @@ bool loadGame() {
         std::cout << "No saved game found. Starting new game..." << std::endl;
         return false;
     }
+}
+
+// Tải high score từ file
+void loadHighScore() {
+    std::ifstream inFile("highscore.txt");
+    if (inFile.is_open()) {
+        inFile >> highScore;
+        inFile.close();
+    } else {
+        highScore = 0;  // Nếu không có file, high score là 0
+    }
+}
+
+// Lưu high score vào file
+void saveHighScore() {
+    if (score > highScore) {
+        highScore = score;
+        std::ofstream outFile("highscore.txt");
+        if (outFile.is_open()) {
+            outFile << highScore;
+            outFile.close();
+        }
+    }
+}
+
+// Trả về high score
+int getHighScore() {
+    return highScore;
 }
