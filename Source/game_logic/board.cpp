@@ -1,22 +1,83 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <sstream>
 #include "board.h"
 
 // Constructor: Khởi tạo bảng, điểm số, high score, và trạng thái undo
 Board::Board() {
-    // Khởi tạo bảng với tất cả giá trị là 0
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             board[i][j] = 0;
-            prevBoard[i][j] = 0;  // Khởi tạo bảng trước đó
+            prevBoard[i][j] = 0;
         }
     }
-    score = 0;      // Khởi tạo điểm số
-    highScore = 0;  // Khởi tạo high score
-    prevScore = 0;  // Khởi tạo điểm số trước đó
-    canUndo = false;  // Ban đầu không thể undo
+    score = 0;
+    highScore = 0;
+    prevScore = 0;
+    canUndo = false;
+    currentUser = "";  // Khởi tạo người dùng hiện tại
 }
+
+// Đặt người dùng hiện tại
+void Board::setCurrentUser(const std::string& username) {
+    currentUser = username;
+}
+
+// Lấy tên người dùng hiện tại
+std::string Board::getCurrentUser() const {
+    return currentUser;
+}
+
+// Đăng nhập: Kiểm tra tên đăng nhập và mật khẩu
+bool Board::login(const std::string& username, const std::string& password) {
+    std::ifstream inFile("users.txt");
+    std::string storedUsername, storedPassword;
+    int storedHighScore;
+
+    if (inFile.is_open()) {
+        while (inFile >> storedUsername >> storedPassword >> storedHighScore) {
+            if (storedUsername == username && storedPassword == password) {
+                currentUser = username;
+                highScore = storedHighScore;
+                inFile.close();
+                return true;
+            }
+        }
+        inFile.close();
+    }
+    return false;
+}
+
+// Đăng ký: Thêm người dùng mới vào file
+bool Board::registerUser(const std::string& username, const std::string& password) {
+    // Kiểm tra xem tên đăng nhập đã tồn tại chưa
+    std::ifstream inFile("users.txt");
+    std::string storedUsername, storedPassword;
+    int storedHighScore;
+
+    if (inFile.is_open()) {
+        while (inFile >> storedUsername >> storedPassword >> storedHighScore) {
+            if (storedUsername == username) {
+                inFile.close();
+                return false;  // Tên đăng nhập đã tồn tại
+            }
+        }
+        inFile.close();
+    }
+
+    // Thêm người dùng mới
+    std::ofstream outFile("users.txt", std::ios::app);  // Mở file ở chế độ append
+    if (outFile.is_open()) {
+        outFile << username << " " << password << " " << 0 << std::endl;  // High score ban đầu là 0
+        outFile.close();
+        currentUser = username;
+        highScore = 0;
+        return true;
+    }
+    return false;
+}
+
 
 // In bảng 4x4 ra console, thay số 0 bằng dấu chấm và căn chỉnh ô
 void Board::printBoard() {
@@ -251,26 +312,57 @@ bool Board::loadGame() {
     }
 }
 
-// Tải high score từ file
+// Tải high score của người dùng hiện tại
 void Board::loadHighScore() {
-    std::ifstream inFile("highscore.txt");
+    if (currentUser.empty()) return;
+
+    std::ifstream inFile("users.txt");
+    std::string username, password;
+    int storedHighScore;
+
     if (inFile.is_open()) {
-        inFile >> highScore;
+        while (inFile >> username >> password >> storedHighScore) {
+            if (username == currentUser) {
+                highScore = storedHighScore;
+                break;
+            }
+        }
         inFile.close();
-    } else {
-        highScore = 0;  // Nếu không có file, high score là 0
     }
 }
 
-// Lưu high score vào file
+// Lưu high score của người dùng hiện tại
 void Board::saveHighScore() {
+    if (currentUser.empty()) return;
+
     if (score > highScore) {
         highScore = score;
-        std::ofstream outFile("highscore.txt");
-        if (outFile.is_open()) {
-            outFile << highScore;
-            outFile.close();
+    }
+
+    // Đọc tất cả dữ liệu từ file
+    std::ifstream inFile("users.txt");
+    std::stringstream buffer;
+    std::string username, password;
+    int storedHighScore;
+    bool updated = false;
+
+    if (inFile.is_open()) {
+        while (inFile >> username >> password >> storedHighScore) {
+            if (username == currentUser) {
+                buffer << username << " " << password << " " << highScore << std::endl;
+                updated = true;
+            } else {
+                buffer << username << " " << password << " " << storedHighScore << std::endl;
+            }
         }
+        inFile.close();
+    }
+
+    // Ghi lại dữ liệu vào file
+    std::ofstream outFile("users.txt");
+    if (outFile.is_open()) {
+        outFile << buffer.str();
+        outFile.close();
     }
 }
 
