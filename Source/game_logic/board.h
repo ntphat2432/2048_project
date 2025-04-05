@@ -4,24 +4,30 @@
 #include <cstdlib>
 #include <ctime>
 
-const int SIZE = 4;
-const int WIN_VALUE = 2048;
-extern int board[SIZE][SIZE];
-extern int score;  // Biến lưu điểm số
+class Board {
+private:
+    static const int SIZE = 4;      // Kích thước bảng
+    static const int WIN_VALUE = 2048;  // Giá trị để thắng
+    int board[SIZE][SIZE];          // Bảng trò chơi
+    int score;                      // Điểm số hiện tại
+    int highScore;                  // Điểm cao nhất
 
-void printBoard();
-void addRandomTile();
-bool moveUp();
-bool moveDown();
-bool moveLeft();
-bool moveRight();
-bool checkWin();
-bool checkLose();
-int getScore();  // Hàm lấy điểm số
-void saveGame();  // Lưu trạng thái trò chơi
-bool loadGame();  // Tải trạng thái trò chơi, trả về true nếu thành công
-void loadHighScore();  // Tải high score từ file
-void saveHighScore();  // Lưu high score vào file
-int getHighScore();    // Trả về high score
+public:
+    Board();                        // Constructor để khởi tạo trò chơi
+    void printBoard();              // In bảng
+    void addRandomTile();           // Thêm ô ngẫu nhiên
+    bool moveUp();                  // Di chuyển lên
+    bool moveDown();                // Di chuyển xuống
+    bool moveLeft();                // Di chuyển trái
+    bool moveRight();               // Di chuyển phải
+    bool checkWin();                // Kiểm tra thắng
+    bool checkLose();               // Kiểm tra thua
+    int getScore();                 // Lấy điểm số hiện tại
+    void saveGame();                // Lưu trò chơi
+    bool loadGame();                // Tải trò chơi
+    void loadHighScore();           // Tải high score
+    void saveHighScore();           // Lưu high score
+    int getHighScore();             // Lấy high score
+};
 
 #endif

@@ -1,14 +1,22 @@
 #include <iostream>
 #include <iomanip>
-#include <fstream>  // Thêm để dùng file
+#include <fstream>
 #include "board.h"
 
-int board[SIZE][SIZE] = {0};
-int score = 0;
-int highScore = 0;
+// Constructor: Khởi tạo bảng, điểm số, và high score
+Board::Board() {
+    // Khởi tạo bảng với tất cả giá trị là 0
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            board[i][j] = 0;
+        }
+    }
+    score = 0;  // Khởi tạo điểm số
+    highScore = 0;  // Khởi tạo high score
+}
 
 // In bảng 4x4 ra console, thay số 0 bằng dấu chấm và căn chỉnh ô
-void printBoard() {
+void Board::printBoard() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (board[i][j] == 0) {
@@ -23,7 +31,7 @@ void printBoard() {
 }
 
 // Thêm một ô ngẫu nhiên (2 hoặc 4) vào vị trí trống trên bảng
-void addRandomTile() {
+void Board::addRandomTile() {
     int empty = 0;
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -49,7 +57,7 @@ void addRandomTile() {
 }
 
 // Di chuyển và hợp nhất ô sang trái, trả về true nếu có thay đổi
-bool moveLeft() {
+bool Board::moveLeft() {
     bool moved = false;
     for (int i = 0; i < SIZE; i++) {
         int k = 0;  // Vị trí tiếp theo để đặt ô
@@ -77,7 +85,7 @@ bool moveLeft() {
 }
 
 // Di chuyển và hợp nhất ô sang phải, trả về true nếu có thay đổi
-bool moveRight() {
+bool Board::moveRight() {
     bool moved = false;
     for (int i = 0; i < SIZE; i++) {
         int k = SIZE - 1;
@@ -103,7 +111,7 @@ bool moveRight() {
 }
 
 // Di chuyển và hợp nhất ô lên trên, trả về true nếu có thay đổi
-bool moveUp() {
+bool Board::moveUp() {
     bool moved = false;
     for (int j = 0; j < SIZE; j++) {
         int k = 0;
@@ -129,7 +137,7 @@ bool moveUp() {
 }
 
 // Di chuyển và hợp nhất ô xuống dưới, trả về true nếu có thay đổi
-bool moveDown() {
+bool Board::moveDown() {
     bool moved = false;
     for (int j = 0; j < SIZE; j++) {
         int k = SIZE - 1;
@@ -155,7 +163,7 @@ bool moveDown() {
 }
 
 // Kiểm tra điều kiện thắng: trả về true nếu có ô đạt 2048
-bool checkWin() {
+bool Board::checkWin() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (board[i][j] == WIN_VALUE) {
@@ -167,7 +175,7 @@ bool checkWin() {
 }
 
 // Kiểm tra điều kiện thua: trả về true nếu không còn ô trống và không thể hợp nhất
-bool checkLose() {
+bool Board::checkLose() {
     // Kiểm tra ô trống
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -193,12 +201,12 @@ bool checkLose() {
 }
 
 // Trả về điểm số hiện tại
-int getScore() {
+int Board::getScore() {
     return score;
 }
 
 // Lưu trạng thái trò chơi (bảng và điểm số) vào file
-void saveGame() {
+void Board::saveGame() {
     std::ofstream outFile("savegame.txt");
     if (outFile.is_open()) {
         // Lưu điểm số
@@ -218,7 +226,7 @@ void saveGame() {
 }
 
 // Tải trạng thái trò chơi từ file, trả về true nếu thành công
-bool loadGame() {
+bool Board::loadGame() {
     std::ifstream inFile("savegame.txt");
     if (inFile.is_open()) {
         // Tải điểm số
@@ -239,7 +247,7 @@ bool loadGame() {
 }
 
 // Tải high score từ file
-void loadHighScore() {
+void Board::loadHighScore() {
     std::ifstream inFile("highscore.txt");
     if (inFile.is_open()) {
         inFile >> highScore;
@@ -250,7 +258,7 @@ void loadHighScore() {
 }
 
 // Lưu high score vào file
-void saveHighScore() {
+void Board::saveHighScore() {
     if (score > highScore) {
         highScore = score;
         std::ofstream outFile("highscore.txt");
@@ -262,6 +270,6 @@ void saveHighScore() {
 }
 
 // Trả về high score
-int getHighScore() {
+int Board::getHighScore() {
     return highScore;
 }
