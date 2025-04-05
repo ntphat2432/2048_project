@@ -12,7 +12,7 @@ int main() {
     clearScreen();
     std::cout << "Welcome to 2048!" << std::endl;
     std::cout << "High Score: " << game.getHighScore() << std::endl;
-    std::cout << "Use W/A/S/D to move, Q to quit, P to save." << std::endl;
+    std::cout << "Use W/A/S/D to move, Q to quit, P to save, U to undo." << std::endl;
     std::cout << "Reach 2048 to win!" << std::endl;
     std::cout << "1. Start new game" << std::endl;
     std::cout << "2. Load saved game" << std::endl;
@@ -34,7 +34,7 @@ int main() {
 
     char move;
     while (true) {
-        std::cout << "Enter move (W/A/S/D to move, Q to quit, P to save): ";
+        std::cout << "Enter move (W/A/S/D to move, Q to quit, P to save, U to undo): ";
         std::cin >> move;
         move = toupper(move);
 
@@ -44,12 +44,39 @@ int main() {
             game.saveGame();
             continue;
         }
-        else if (move == 'W') moved = game.moveUp();
-        else if (move == 'S') moved = game.moveDown();
-        else if (move == 'A') moved = game.moveLeft();
-        else if (move == 'D') moved = game.moveRight();
+        else if (move == 'U') {
+            if (game.canUndoMove()) {
+                game.undo();
+                clearScreen();
+                std::cout << "Move undone!" << std::endl;
+                std::cout << "Score: " << game.getScore() << std::endl;
+                game.printBoard();
+            } else {
+                std::cout << "Cannot undo!" << std::endl;
+                std::cout << "Press Enter to continue..." << std::endl;
+                std::cin.ignore();
+                std::cin.get();
+            }
+            continue;
+        }
+        else if (move == 'W') {
+            game.saveState();  // Lưu trạng thái trước khi di chuyển
+            moved = game.moveUp();
+        }
+        else if (move == 'S') {
+            game.saveState();  // Lưu trạng thái trước khi di chuyển
+            moved = game.moveDown();
+        }
+        else if (move == 'A') {
+            game.saveState();  // Lưu trạng thái trước khi di chuyển
+            moved = game.moveLeft();
+        }
+        else if (move == 'D') {
+            game.saveState();  // Lưu trạng thái trước khi di chuyển
+            moved = game.moveRight();
+        }
         else {
-            std::cout << "Invalid move! Use W/A/S/D, Q to quit, or P to save." << std::endl;
+            std::cout << "Invalid move! Use W/A/S/D, Q to quit, P to save, U to undo." << std::endl;
             std::cout << "Press Enter to continue..." << std::endl;
             std::cin.ignore();
             std::cin.get();

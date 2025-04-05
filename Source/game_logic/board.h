@@ -11,6 +11,9 @@ private:
     int board[SIZE][SIZE];          // Bảng trò chơi
     int score;                      // Điểm số hiện tại
     int highScore;                  // Điểm cao nhất
+    int prevBoard[SIZE][SIZE];      // Lưu trạng thái bảng trước đó
+    int prevScore;                  // Lưu điểm số trước đó
+    bool canUndo;                   // Cờ để kiểm tra xem có thể undo không
 
 public:
     Board();                        // Constructor để khởi tạo trò chơi
@@ -28,6 +31,9 @@ public:
     void loadHighScore();           // Tải high score
     void saveHighScore();           // Lưu high score
     int getHighScore();             // Lấy high score
+    void saveState();               // Lưu trạng thái trước khi di chuyển
+    void undo();                    // Hoàn tác nước đi
+    bool canUndoMove();             // Kiểm tra xem có thể undo không
 };
 
 #endif

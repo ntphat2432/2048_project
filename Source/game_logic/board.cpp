@@ -3,16 +3,19 @@
 #include <fstream>
 #include "board.h"
 
-// Constructor: Khởi tạo bảng, điểm số, và high score
+// Constructor: Khởi tạo bảng, điểm số, high score, và trạng thái undo
 Board::Board() {
     // Khởi tạo bảng với tất cả giá trị là 0
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             board[i][j] = 0;
+            prevBoard[i][j] = 0;  // Khởi tạo bảng trước đó
         }
     }
-    score = 0;  // Khởi tạo điểm số
+    score = 0;      // Khởi tạo điểm số
     highScore = 0;  // Khởi tạo high score
+    prevScore = 0;  // Khởi tạo điểm số trước đó
+    canUndo = false;  // Ban đầu không thể undo
 }
 
 // In bảng 4x4 ra console, thay số 0 bằng dấu chấm và căn chỉnh ô
@@ -223,6 +226,7 @@ void Board::saveGame() {
     } else {
         std::cout << "Error: Unable to save game!" << std::endl;
     }
+    canUndo = false;  // Sau khi lưu, không cho phép undo
 }
 
 // Tải trạng thái trò chơi từ file, trả về true nếu thành công
@@ -239,6 +243,7 @@ bool Board::loadGame() {
         }
         inFile.close();
         std::cout << "Game loaded successfully!" << std::endl;
+        canUndo = false;  // Sau khi tải, không cho phép undo
         return true;
     } else {
         std::cout << "No saved game found. Starting new game..." << std::endl;
@@ -272,4 +277,39 @@ void Board::saveHighScore() {
 // Trả về high score
 int Board::getHighScore() {
     return highScore;
+}
+
+// Lưu trạng thái hiện tại của bảng và điểm số trước khi di chuyển
+void Board::saveState() {
+    // Sao chép bảng hiện tại vào prevBoard
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            prevBoard[i][j] = board[i][j];
+        }
+    }
+    // Sao chép điểm số hiện tại vào prevScore
+    prevScore = score;
+    canUndo = true;  // Cho phép undo sau khi lưu trạng thái
+}
+
+// Hoàn tác nước đi: khôi phục bảng và điểm số từ trạng thái trước đó
+void Board::undo() {
+    if (!canUndo) {
+        std::cout << "Cannot undo!" << std::endl;
+        return;
+    }
+    // Khôi phục bảng
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            board[i][j] = prevBoard[i][j];
+        }
+    }
+    // Khôi phục điểm số
+    score = prevScore;
+    canUndo = false;  // Sau khi undo, không cho phép undo tiếp
+}
+
+// Kiểm tra xem có thể undo không
+bool Board::canUndoMove() {
+    return canUndo;
 }
